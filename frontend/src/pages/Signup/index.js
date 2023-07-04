@@ -11,6 +11,14 @@ const Signup = () => {
   const [emailConf, setEmailConf] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [requirementsMet, setRequirementsMet] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
 
   const handleLogup = async () => {
     if (!nome | !email | !emailConf | !senha) {
@@ -24,6 +32,23 @@ const Signup = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Insira um email válido");
+      return;
+    }
+
+    setRequirementsMet({
+      length: senha.length >= 8,
+      uppercase: /[A-Z]/.test(senha),
+      lowercase: /[a-z]/.test(senha),
+      number: /\d/.test(senha),
+      specialChar: /[@$!%*?&]/.test(senha),
+    });
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(senha)) {
+      setError(
+        "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
+      );
       return;
     }
 
@@ -68,9 +93,41 @@ const Signup = () => {
           type="password"
           placeholder="Digite sua Senha"
           value={senha}
-          onChange={(e) => [setSenha(e.target.value), setError("")]}
+          onChange={(e) => {
+            setSenha(e.target.value);
+            setError("");
+            setRequirementsMet({
+              length: e.target.value.length >= 8,
+              uppercase: /[A-Z]/.test(e.target.value),
+              lowercase: /[a-z]/.test(e.target.value),
+              number: /\d/.test(e.target.value),
+              specialChar: /[@$!%*?&]/.test(e.target.value),
+            });
+          }}
         />
         <C.labelError>{error}</C.labelError>
+        <C.labelInfoTitle>A senha deve conter pelo menos:</C.labelInfoTitle>
+        <C.labelInfo style={requirementsMet.length ? { color: "green" } : null}>
+          8 caracteres
+        </C.labelInfo>
+        <C.labelInfo
+          style={requirementsMet.uppercase ? { color: "green" } : null}
+        >
+          Uma letra maiúscula
+        </C.labelInfo>
+        <C.labelInfo
+          style={requirementsMet.lowercase ? { color: "green" } : null}
+        >
+          Uma letra minúscula
+        </C.labelInfo>
+        <C.labelInfo style={requirementsMet.number ? { color: "green" } : null}>
+          Um número
+        </C.labelInfo>
+        <C.labelInfo
+          style={requirementsMet.specialChar ? { color: "green" } : null}
+        >
+          Um caractere especial
+        </C.labelInfo>
         <Button Text="Inscrever-se" onClick={handleLogup} />
         <C.LabelSignin>
           Já tem uma conta?
