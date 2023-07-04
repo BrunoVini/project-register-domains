@@ -39,6 +39,18 @@ export const labelError = styled.label`
   color: red;
 `;
 
+export const labelInfo = styled.label`
+  font-size: 14px;
+  color: #d19615;
+  align-self: flex-start;
+`;
+
+export const labelInfoTitle = styled.label`
+  font-size: 14px;
+  color: #676767;
+  align-self: flex-start;
+`;
+
 export const Strong = styled.strong`
   cursor: pointer;
 
